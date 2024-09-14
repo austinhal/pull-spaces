@@ -4,6 +4,9 @@ module.exports = {
     locales: ["en", "es"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ['localhost'], // Add a placeholder or real domain here
+  },
   async rewrites() {
     return [
       {
@@ -23,4 +26,5 @@ module.exports = {
     ]
   },
 }
+
 
