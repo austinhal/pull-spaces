@@ -4,9 +4,6 @@ module.exports = {
     locales: ["en", "es"],
     defaultLocale: "en",
   },
-  images: {
-    domains: [],
-  },
   async rewrites() {
     return [
       {
@@ -26,3 +23,4 @@ module.exports = {
     ]
   },
 }
+
