@@ -9,7 +9,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { DrupalNode } from "next-drupal"
 
-import { drupal } from "lib/drupal"
+import { drupal, isDrupalAvailable } from "lib/drupal"
 import { getMenus } from "lib/get-menus"
 import { absoluteURL } from "lib/utils/absolute-url"
 import { getParams } from "lib/get-params"
