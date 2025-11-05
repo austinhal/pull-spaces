@@ -81,48 +81,84 @@ export async function getStaticPaths(
 export async function getStaticProps(
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<NodePageProps>> {
-  const path = await drupal.translatePathFromContext(context)
-
-  if (!path || !RESOURCE_TYPES.includes(path.jsonapi.resourceName)) {
+  if (!isDrupalAvailable()) {
+    console.warn("Drupal is not configured. Returning fallback page.")
     return {
-      notFound: true,
+      props: {
+        node: {
+          id: "fallback",
+          title: "Site Configuration Required",
+          type: "node--page",
+          status: true,
+          path: { alias: context.params.slug?.[0] || "/" },
+          metatag: [],
+          field_sections: [],
+        } as DrupalNode,
+        menus: {},
+      },
     }
   }
 
-  const type = path.jsonapi.resourceName
+  try {
+    const path = await drupal.translatePathFromContext(context)
 
-  const node = await drupal.getResourceFromContext<DrupalNode>(path, context, {
-    params: getParams(type),
-  })
-
-  if (!node || (!context.preview && node?.status === false)) {
-    return {
-      notFound: true,
+    if (!path || !RESOURCE_TYPES.includes(path.jsonapi.resourceName)) {
+      return {
+        notFound: true,
+      }
     }
-  }
 
-  // Load initial view data.
-  if (type === "node--landing_page") {
-    for (const section of node.field_sections) {
-      if (section.type === "paragraph--view" && section.field_view) {
-        const view = await drupal.getView(section.field_view, {
-          params: {
-            include: "field_location,field_images.field_media_image",
-          },
-        })
+    const type = path.jsonapi.resourceName
 
-        section.field_view = {
-          name: section.field_view,
-          ...view,
+    const node = await drupal.getResourceFromContext<DrupalNode>(path, context, {
+      params: getParams(type),
+    })
+
+    if (!node || (!context.preview && node?.status === false)) {
+      return {
+        notFound: true,
+      }
+    }
+
+    // Load initial view data.
+    if (type === "node--landing_page") {
+      for (const section of node.field_sections) {
+        if (section.type === "paragraph--view" && section.field_view) {
+          const view = await drupal.getView(section.field_view, {
+            params: {
+              include: "field_location,field_images.field_media_image",
+            },
+          })
+
+          section.field_view = {
+            name: section.field_view,
+            ...view,
+          }
         }
       }
     }
-  }
 
-  return {
-    props: {
-      node,
-      menus: await getMenus(context),
-    },
+    return {
+      props: {
+        node,
+        menus: await getMenus(context),
+      },
+    }
+  } catch (error) {
+    console.warn("Error fetching Drupal content:", error)
+    return {
+      props: {
+        node: {
+          id: "error",
+          title: "Content Unavailable",
+          type: "node--page",
+          status: true,
+          path: { alias: context.params.slug?.[0] || "/" },
+          metatag: [],
+          field_sections: [],
+        } as DrupalNode,
+        menus: {},
+      },
+    }
   }
 }
