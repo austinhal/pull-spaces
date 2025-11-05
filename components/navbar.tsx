@@ -90,7 +90,7 @@ export function Navbar({ links, ...props }: NavbarProps) {
             className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 mt-4"
           >
             <div className="container px-6 py-4">
-              <Menu items={links} mobile />
+              <Menu items={links} mobile onClose={() => setMobileMenuOpen(false)} />
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <LocaleSwitcher />
               </div>
