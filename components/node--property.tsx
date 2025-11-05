@@ -28,8 +28,11 @@ export function NodePropertyGrid({ node }) {
           src={`${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${thumbnail.uri.url}`}
           width={360}
           height={240}
-          layout="responsive"
-          objectFit="cover"
+          sizes="(max-width: 768px) 100vw, 360px"
+          style={{ objectFit: 'cover' }}
+          alt={thumbnail.resourceIdObjMeta?.alt || node.title || 'Property image'}
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R/xjqNzTakmeZQQM5xQB5Df/9k="
         />
       )}
       <div className="p-6">
