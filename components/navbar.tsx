@@ -102,7 +102,7 @@ export function Navbar({ links, ...props }: NavbarProps) {
   )
 }
 
-function Menu({ items, mobile = false }: { items: DrupalMenuLinkContent[], mobile?: boolean }) {
+function Menu({ items, mobile = false, onClose }: { items: DrupalMenuLinkContent[], mobile?: boolean, onClose?: () => void }) {
   const { asPath } = useRouter()
 
   return (
@@ -120,7 +120,7 @@ function Menu({ items, mobile = false }: { items: DrupalMenuLinkContent[], mobil
           link={item}
           key={item.id}
           isActive={item.url === asPath}
-          onClick={() => mobile && setMobileMenuOpen(false)}
+          onClick={onClose}
         />
       ))}
     </ul>
