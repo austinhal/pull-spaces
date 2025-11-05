@@ -1,4 +1,5 @@
-import { DrupalClient } from "next-drupal"
+import { GetStaticPathsContext, GetStaticPropsContext } from "next"
+import { JsonApiResponse } from "next-drupal"
 
 // Helper function to check if Drupal is available
 export function isDrupalAvailable() {
@@ -8,7 +9,7 @@ export function isDrupalAvailable() {
 // Simple object with methods that check for Drupal availability
 export const drupal = {
   // Method proxy that checks availability before calling real Drupal client
-  async getStaticPathsFromContext(...args: any[]) {
+  async getStaticPathsFromContext(resourceTypes: string[], context: GetStaticPathsContext, options?: any) {
     if (!isDrupalAvailable()) {
       console.warn("Drupal is not configured. Skipping static path generation.")
       return []
@@ -16,50 +17,50 @@ export const drupal = {
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getStaticPathsFromContext(...args)
+    return client.getStaticPathsFromContext(resourceTypes, context, options)
   },
 
-  async translatePathFromContext(...args: any[]) {
+  async translatePathFromContext(context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.translatePathFromContext(...args)
+    return client.translatePathFromContext(context, options)
   },
 
-  async getResourceFromContext(...args: any[]) {
+  async getResourceFromContext<T>(path: any, context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getResourceFromContext(...args)
+    return client.getResourceFromContext<T>(path, context, options)
   },
 
-  async getResourceCollectionFromContext(...args: any[]) {
+  async getResourceCollectionFromContext<T>(resourceType: string, context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getResourceCollectionFromContext(...args)
+    return client.getResourceCollectionFromContext<T>(resourceType, context, options)
   },
 
-  async getView(...args: any[]) {
+  async getView(viewId: string, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getView(...args)
+    return client.getView(viewId, options)
   },
 
-  async getMenu(...args: any[]) {
+  async getMenu(menuName: string, options?: any) {
     if (!isDrupalAvailable()) {
       console.warn("Drupal is not configured. Returning empty menu.")
       return { tree: [] }
@@ -67,10 +68,14 @@ export const drupal = {
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getMenu(...args)
+    return client.getMenu(menuName, options)
   },
 
-  deserialize(data: any) {
+  deserialize(data: JsonApiResponse) {
+    if (!isDrupalAvailable()) {
+      return null
+    }
+
     const { DrupalClient } = require("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
     return client.deserialize(data)
