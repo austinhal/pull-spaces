@@ -40,14 +40,14 @@ export const drupal = {
     return client.getResourceFromContext<T>(path, context, options)
   },
 
-  async getResourceCollectionFromContext<T extends JsonApiResource>(resourceType: string, context: GetStaticPropsContext, options?: any) {
+  async getResourceCollectionFromContext(resourceType: string, context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
 
     const { DrupalClient } = await import("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
-    return client.getResourceCollectionFromContext<T>(resourceType, context, options)
+    return client.getResourceCollectionFromContext(resourceType, context, options)
   },
 
   async getView(viewId: string, options?: any) {
