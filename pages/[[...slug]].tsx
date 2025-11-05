@@ -101,7 +101,7 @@ export async function getStaticProps(
           metatag: [],
           field_sections: [],
         } as unknown as DrupalNode,
-        menus: {},
+        menus: { main: [], footer: [] },
       },
     }
   }
@@ -171,7 +171,7 @@ export async function getStaticProps(
           metatag: [],
           field_sections: [],
         } as unknown as DrupalNode,
-        menus: {},
+        menus: { main: [], footer: [] },
       },
     }
   }
