@@ -79,5 +79,16 @@ export const drupal = {
     const { DrupalClient } = require("next-drupal")
     const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
     return client.deserialize(data)
+  },
+
+  async preview(request: any, response: any) {
+    if (!isDrupalAvailable()) {
+      response.status(404).end("Drupal not configured")
+      return
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.preview(request, response)
   }
 }
