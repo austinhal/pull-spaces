@@ -75,8 +75,11 @@ export default function App({ Component, pageProps }) {
   }
 
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isClient, setIsClient] = React.useState(false)
 
   React.useEffect(() => {
+    setIsClient(true)
+
     const handleStart = (url: string) => {
       url !== Router.asPath && setIsLoading(true)
     }
@@ -92,6 +95,23 @@ export default function App({ Component, pageProps }) {
       Router.events.off("routeChangeError", handleComplete)
     }
   }, [])
+
+  // Skip page transitions during SSR
+  if (!isClient) {
+    return (
+      <React.StrictMode>
+        <QueryClientProvider client={queryClientRef.current}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Suspense fallback={<LoadingFallback />}>
+              <div className="min-h-screen">
+                <Component {...pageProps} />
+              </div>
+            </Suspense>
+          </Hydrate>
+        </QueryClientProvider>
+      </React.StrictMode>
+    )
+  }
 
   return (
     <React.StrictMode>
