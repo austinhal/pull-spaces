@@ -86,14 +86,21 @@ export async function getStaticProps(
     return {
       props: {
         node: {
+          drupal_internal__nid: "fallback",
+          drupal_internal__vid: "fallback",
+          uuid: "fallback",
           id: "fallback",
           title: "Site Configuration Required",
           type: "node--page",
           status: true,
+          created: new Date().toISOString(),
+          changed: new Date().toISOString(),
+          default_langcode: true,
+          langcode: context.locale || "en",
           path: { alias: context.params.slug?.[0] || "/" },
           metatag: [],
           field_sections: [],
-        } as DrupalNode,
+        } as unknown as DrupalNode,
         menus: {},
       },
     }
