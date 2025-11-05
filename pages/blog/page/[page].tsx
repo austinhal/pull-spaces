@@ -76,7 +76,7 @@ export async function getStaticProps(
       props: {
         nodes: [],
         page: { current: 1, total: 1 },
-        menus: {},
+        menus: { main: [], footer: [] },
       },
     }
   }
@@ -141,7 +141,7 @@ export async function getStaticProps(
       props: {
         nodes: [],
         page: { current: 1, total: 1 },
-        menus: {},
+        menus: { main: [], footer: [] },
       },
     }
   }
