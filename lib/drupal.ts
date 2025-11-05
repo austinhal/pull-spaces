@@ -30,7 +30,7 @@ export const drupal = {
     return client.translatePathFromContext(context, options)
   },
 
-  async getResourceFromContext<T>(path: any, context: GetStaticPropsContext, options?: any) {
+  async getResourceFromContext<T extends JsonApiResource>(path: any, context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
@@ -40,7 +40,7 @@ export const drupal = {
     return client.getResourceFromContext<T>(path, context, options)
   },
 
-  async getResourceCollectionFromContext<T>(resourceType: string, context: GetStaticPropsContext, options?: any) {
+  async getResourceCollectionFromContext<T extends JsonApiResource>(resourceType: string, context: GetStaticPropsContext, options?: any) {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
