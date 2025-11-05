@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { DrupalNode, JsonApiResponse } from "next-drupal"
 import { DrupalJsonApiParams } from "drupal-jsonapi-params"
 
-import { drupal } from "lib/drupal"
+import { drupal, isDrupalAvailable } from "lib/drupal"
 import { getMenus } from "lib/get-menus"
 import { Layout, LayoutProps } from "components/layout"
 import { Pager, PagerProps } from "components/pager"
