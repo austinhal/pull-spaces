@@ -40,7 +40,7 @@ export const drupal = {
     return client.getResourceFromContext<T>(path, context, options)
   },
 
-  async getResourceCollectionFromContext(resourceType: string, context: GetStaticPropsContext, options?: any) {
+  async getResourceCollectionFromContext(resourceType: string, context: GetStaticPropsContext, options?: any): Promise<JsonApiResponse> {
     if (!isDrupalAvailable()) {
       throw new Error("Drupal is not configured.")
     }
