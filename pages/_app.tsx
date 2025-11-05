@@ -52,7 +52,7 @@ function pageVariants() {
 
 function pageTransition() {
   return {
-    type: "tween",
+    type: "tween" as const,
     ease: "anticipate",
     duration: 0.5
   }
