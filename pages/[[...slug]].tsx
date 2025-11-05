@@ -49,16 +49,32 @@ export default function NodePage({ node, menus }: NodePageProps) {
 export async function getStaticPaths(
   context: GetStaticPathsContext
 ): Promise<GetStaticPathsResult> {
-  return {
-    paths: await drupal.getStaticPathsFromContext(RESOURCE_TYPES, context, {
-      params: {
-        filter: {
-          "field_site.meta.drupal_internal__target_id":
-            process.env.DRUPAL_SITE_ID,
+  if (!isDrupalAvailable()) {
+    console.warn("Drupal is not configured. Skipping static path generation.")
+    return {
+      paths: [],
+      fallback: "blocking",
+    }
+  }
+
+  try {
+    return {
+      paths: await drupal.getStaticPathsFromContext(RESOURCE_TYPES, context, {
+        params: {
+          filter: {
+            "field_site.meta.drupal_internal__target_id":
+              process.env.DRUPAL_SITE_ID,
+          },
         },
-      },
-    }),
-    fallback: "blocking",
+      }),
+      fallback: "blocking",
+    }
+  } catch (error) {
+    console.warn("Error generating static paths:", error)
+    return {
+      paths: [],
+      fallback: "blocking",
+    }
   }
 }
 
