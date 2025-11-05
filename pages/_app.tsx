@@ -51,10 +51,7 @@ function pageVariants() {
 }
 
 function pageTransition() {
-  return {
-    duration: 0.5,
-    ease: "easeInOut"
-  }
+  return { duration: 0.5 }
 }
 
 export default function App({ Component, pageProps }) {
