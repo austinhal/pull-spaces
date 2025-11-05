@@ -102,7 +102,7 @@ export async function getStaticProps(
       .addFilter("status", "1")
       .addSort("created", "DESC")
 
-    const result = await drupal.getResourceCollectionFromContext<JsonApiResponse>(
+    const result = await drupal.getResourceCollectionFromContext(
       "node--article",
       context,
       {
