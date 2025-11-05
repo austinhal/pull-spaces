@@ -5,47 +5,74 @@ export function isDrupalAvailable() {
   return !!process.env.NEXT_PUBLIC_DRUPAL_BASE_URL
 }
 
-// Lazy Drupal client creation
-function createDrupalClient() {
-  const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL
-
-  if (!baseUrl) {
-    console.warn(
-      "⚠️  NEXT_PUBLIC_DRUPAL_BASE_URL is not set. " +
-      "Please set this environment variable to connect to your Drupal backend. " +
-      "For development, create a .env.local file with your Drupal URL."
-    )
-    return null
-  }
-
-  return new DrupalClient(baseUrl, {
-    frontPage: process.env.DRUPAL_FRONT_PAGE || "/home",
-    auth: process.env.DRUPAL_CLIENT_ID && process.env.DRUPAL_CLIENT_SECRET ? {
-      clientId: process.env.DRUPAL_CLIENT_ID,
-      clientSecret: process.env.DRUPAL_CLIENT_SECRET,
-    } : undefined,
-  })
-}
-
-// Create Drupal client lazily - only when first accessed
-let _drupalClient: DrupalClient | null = null
-
+// Simple object with methods that check for Drupal availability
 export const drupal = {
-  get client() {
-    if (!_drupalClient) {
-      _drupalClient = createDrupalClient()
+  // Method proxy that checks availability before calling real Drupal client
+  async getStaticPathsFromContext(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      console.warn("Drupal is not configured. Skipping static path generation.")
+      return []
     }
-    return _drupalClient
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.getStaticPathsFromContext(...args)
+  },
+
+  async translatePathFromContext(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      throw new Error("Drupal is not configured.")
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.translatePathFromContext(...args)
+  },
+
+  async getResourceFromContext(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      throw new Error("Drupal is not configured.")
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.getResourceFromContext(...args)
+  },
+
+  async getResourceCollectionFromContext(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      throw new Error("Drupal is not configured.")
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.getResourceCollectionFromContext(...args)
+  },
+
+  async getView(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      throw new Error("Drupal is not configured.")
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.getView(...args)
+  },
+
+  async getMenu(...args: any[]) {
+    if (!isDrupalAvailable()) {
+      console.warn("Drupal is not configured. Returning empty menu.")
+      return { tree: [] }
+    }
+
+    const { DrupalClient } = await import("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.getMenu(...args)
+  },
+
+  deserialize(data: any) {
+    const { DrupalClient } = require("next-drupal")
+    const client = new DrupalClient(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!)
+    return client.deserialize(data)
   }
 }
-
-// Proxy to maintain backward compatibility
-export const drupalProxy = new Proxy({}, {
-  get(target, prop) {
-    const client = drupal.client
-    if (!client) {
-      throw new Error('Drupal client is not available. Please check your environment variables.')
-    }
-    return typeof client[prop] === 'function' ? client[prop].bind(client) : client[prop]
-  }
-}) as any
