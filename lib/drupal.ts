@@ -1,5 +1,5 @@
 import { GetStaticPathsContext, GetStaticPropsContext } from "next"
-import { JsonApiResponse } from "next-drupal"
+import { JsonApiResponse, JsonApiResource } from "next-drupal"
 
 // Helper function to check if Drupal is available
 export function isDrupalAvailable() {
