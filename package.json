@@ -22,7 +22,7 @@
     "drupal-jsonapi-params": "^2.3.1",
     "framer-motion": "^12.23.24",
     "html-react-parser": "^4.2.10",
-    "next": "^14.2.2",
+    "next": "14.2.35",
     "next-drupal": "^2.0.0-beta.0",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
